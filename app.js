@@ -22,7 +22,7 @@ app.use(function (req, res, next) {
 })
 
 app.listen(config.port, () => {
-  console.log(`Pakistrano server is running at ${config.port}`)
+  console.log(`Pakistrano camera server is running at ${config.port}`)
 })
 
 
