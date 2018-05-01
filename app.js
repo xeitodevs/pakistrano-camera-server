@@ -1,3 +1,5 @@
+'use strict'
+
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
@@ -6,6 +8,28 @@ const camera = require('./src/cameraAdapter')
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+
+app.get('/snapshot', async (req, res) => {
+
+  try {
+    const cameraResponse = await camera.getSnapshot()
+    res.set('Content-Type', 'image/jpeg')
+    res.send(cameraResponse)
+  } catch (err) {
+
+  }
+
+})
+
+app.get('/ping', async (req, res) => {
+
+  try {
+    const millis = await camera.ping()
+    res.send({ millis })
+  } catch (err) {
+
+  }
+})
 
 app.post('/move-right', async (req, res) => {
 
@@ -21,9 +45,4 @@ app.use(function (req, res, next) {
   next(err)
 })
 
-app.listen(config.port, () => {
-  console.log(`Pakistrano camera server is running at ${config.port}`)
-})
-
-
-
+module.exports = app
