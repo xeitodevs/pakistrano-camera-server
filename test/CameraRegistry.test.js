@@ -1,24 +1,11 @@
 const test = require('ava')
 const { CameraNotFoundException } = require('../src/CameraNotFoundException')
 const { CameraRegistry } = require('../src/CameraRegistry')
+const { door1Camera, livingRoomCamera } = require('./resources/fixtures')
 
 let registry
 
-const livingRoomCamera = {
-  name: 'livingroom',
-  host: '192.168.1.1',
-  user: 'admin',
-  password: 'qwerty'
-}
-
-const door1Camera = {
-  name: 'door1',
-  host: '192.168.1.2',
-  user: 'admin',
-  password: 'yterwq'
-}
-
-test.beforeEach(t => {
+test.beforeEach(() => {
   registry = new CameraRegistry()
 })
 
