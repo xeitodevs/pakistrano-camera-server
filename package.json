@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "ava"
+    "test": "nyc --reporter=lcov ava test/**.test.js --verbose",
+    "unit-test": "nyc --reporter=lcov ava test/**.test.js --verbose --match='*unit test*'"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
+    "nyc": "^11.7.1",
     "standard": "^11.0.1",
     "supertest": "^3.0.0"
   }

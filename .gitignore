@@ -1,3 +1,5 @@
 .idea
 node_modules
 var
+.nyc_output
+coverage
