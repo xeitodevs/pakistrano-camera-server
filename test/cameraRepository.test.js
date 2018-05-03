@@ -1,19 +1,14 @@
 const test = require('ava')
 const { door1Camera, livingRoomCamera } = require('./resources/fixtures')
 const {
-  connection,
   getCameraListing,
   retrieveCamera,
-  saveCamera
+  saveCamera,
+  deleteCameras
 } = require('../src/cameraRepository')
 
-const clearDataBase = async function () {
-  const db = await connection
-  db.run('DELETE FROM camera')
-}
-
-test.beforeEach(clearDataBase)
-test.afterEach(clearDataBase)
+test.beforeEach(deleteCameras)
+test.afterEach(deleteCameras)
 
 test.serial('Get camera must retrieve an specific camera in repository', async (t) => {
 
@@ -29,4 +24,18 @@ test.serial('Save camera creation fields', async (t) => {
   await saveCamera(livingRoomCamera)
   const result = await retrieveCamera('livingroom')
   t.true(result.uuid.length === 36)
+  t.is(result.name, 'livingroom')
+  t.is(result.host, '192.168.1.1')
+  t.is(result.user, 'admin')
+  t.is(result.password, 'qwerty')
+  t.is(new Date(result.createdAt).getDay(), new Date().getDay())
+  t.is(new Date(result.updatedAt).getDay(), new Date().getDay())
+})
+
+test.serial('Must return a listing with all cameras', async (t) => {
+  const uuid1 = await saveCamera(door1Camera)
+  const uuid2 = await saveCamera(livingRoomCamera)
+  const result = await getCameraListing()
+  t.is(uuid1, result[0].uuid)
+  t.is(uuid2, result[1].uuid)
 })
