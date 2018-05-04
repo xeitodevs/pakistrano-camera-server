@@ -24,7 +24,7 @@ async function retrieveCamera (name) {
 async function saveCamera ({ name, host, user, password }) {
   const db = await connection
   const uuid = uuidGen()
-  await db.run(`INSERT INTO ${cameraTable} (uuid, name, host, user, password) VALUES (?, ?, ?, ?, ?)`, [uuid, name, host, user, password])
+  await db.run(`INSERT INTO ${cameraTable} (uuid, name, host, user, password, created_at) VALUES (?, ?, ?, ?, ?, ?)`, [uuid, name, host, user, password, new Date()])
   return uuid
 }
 
