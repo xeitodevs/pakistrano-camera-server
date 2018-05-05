@@ -5,6 +5,12 @@ function assertNearDate (t, date1, date2, maxDistanceMillis) {
   t.true(timeDiff <= maxDistanceMillis, `Time result ${timeDiff} exceeds ${maxDistanceMillis}.`)
 }
 
+function assertUuid (t, uuid) {
+  const v4 = new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i)
+  t.truthy(uuid.match(v4))
+}
+
 module.exports = {
-  assertNearDate
+  assertNearDate,
+  assertUuid
 }
