@@ -18,7 +18,7 @@ class CameraRegistry {
         return camera
       }
     }
-    throw new CameraNotFoundException(`Cannot find camera ${name}`)
+    throw new CameraNotFoundException(name)
   }
 }
 
