@@ -4,8 +4,10 @@
   "description": "A web server to control cameras.",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node index.js",
+    "start:dev": "nodemon index.js",
     "test": "nyc --reporter=lcov ava test/**.test.js --verbose",
+    "test:watch": "nyc --reporter=lcov ava test/**.test.js --verbose --watch",
     "unit-test": "nyc --reporter=lcov ava test/**.test.js --verbose --match='*unit test*'"
   },
   "repository": {
@@ -36,6 +38,7 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
+    "nodemon": "^1.17.4",
     "nyc": "^11.7.1",
     "standard": "^11.0.1",
     "supertest": "^3.0.0"
