@@ -8,7 +8,8 @@
     "start:dev": "nodemon index.js",
     "test": "nyc --reporter=lcov ava test/**.test.js --verbose",
     "test:watch": "nyc --reporter=lcov ava test/**.test.js --verbose --watch",
-    "unit-test": "nyc --reporter=lcov ava test/**.test.js --verbose --match='*unit test*'"
+    "unit-test": "nyc --reporter=lcov ava test/**.test.js --verbose --match='*unit test*'",
+    "prepush": "npm test"
   },
   "repository": {
     "type": "git",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
+    "husky": "^0.14.3",
     "nodemon": "^1.17.4",
     "nyc": "^11.7.1",
     "standard": "^11.0.1",
