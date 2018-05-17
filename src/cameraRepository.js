@@ -47,7 +47,7 @@ async function deleteCamera (name) {
 
 async function deleteCameras () {
   const db = await connection
-  db.run(`DELETE FROM ${cameraTable}`)
+  await db.run(`DELETE FROM ${cameraTable}`)
 }
 
 module.exports = {

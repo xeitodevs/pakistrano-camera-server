@@ -1,4 +1,4 @@
-const test = require('ava')
+const { serial: test} = require('ava')
 const app = require('../app')
 const {
   deleteCameras,
@@ -15,7 +15,7 @@ test.afterEach(deleteCameras)
 
 const expectedContentType = 'application/json; charset=utf-8'
 
-test.serial('Api - Registering new cameras must respond properly', async (t) => {
+test('Registering new cameras must respond properly', async (t) => {
   const result = await request(app)
     .post('/cameras')
     .expect('Content-Type', expectedContentType)
@@ -30,7 +30,7 @@ test.serial('Api - Registering new cameras must respond properly', async (t) => 
 })
 
 
-test.serial('Api - Registering new cameras duplicated must be conflict', async (t) => {
+test('Registering new cameras duplicated must be conflict', async (t) => {
 
   await saveCamera(livingRoomCamera)
   const result = await request(app)
@@ -42,7 +42,7 @@ test.serial('Api - Registering new cameras duplicated must be conflict', async (
   t.is(body.message, `Camera name ${livingRoomCamera.name} is duplicated`)
 })
 
-test.serial('Api - Listing registered cameras', async (t) => {
+test('Listing registered cameras', async (t) => {
   const uuidDoor1Camera = await saveCamera(door1Camera)
   const uuidLivingRoom = await saveCamera(livingRoomCamera)
   const result = await request(app)
@@ -55,7 +55,7 @@ test.serial('Api - Listing registered cameras', async (t) => {
   t.is(uuidLivingRoom, body[1].uuid)
 })
 
-test.serial('Api - Get specific camera by name', async (t) => {
+test('Get specific camera by name', async (t) => {
   await saveCamera(door1Camera)
   const uuidLivingRoom = await saveCamera(livingRoomCamera)
   const result = await request(app)
@@ -66,7 +66,7 @@ test.serial('Api - Get specific camera by name', async (t) => {
   t.is(uuidLivingRoom, body.uuid)
 })
 
-test.serial('Api - Get specific camera by name, not found', async (t) => {
+test('Get specific camera by name, not found', async (t) => {
 
   const cameraToSearch = 'unknown404'
   const result = await request(app)
@@ -78,7 +78,7 @@ test.serial('Api - Get specific camera by name, not found', async (t) => {
   t.is(body.message, `Cannot find camera ${cameraToSearch}`)
 })
 
-test.serial('Api - Delete specific camera by name', async (t) => {
+test('Delete specific camera by name', async (t) => {
   await saveCamera(livingRoomCamera)
   await saveCamera(door1Camera)
 
@@ -93,7 +93,7 @@ test.serial('Api - Delete specific camera by name', async (t) => {
   t.is(door1Camera.name, existingCameras[0].name)
 })
 
-test.serial('Api - Delete specific camera by name, not found', async (t) => {
+test('Delete specific camera by name, not found', async (t) => {
 
   const cameraToSearch = 'unknown404'
   const result = await request(app)
@@ -104,7 +104,7 @@ test.serial('Api - Delete specific camera by name, not found', async (t) => {
   t.is(body.message, `Cannot find camera ${cameraToSearch}`)
 })
 
-test.serial('Api - Delete all cameras', async (t) => {
+test('Delete all cameras', async (t) => {
   await saveCamera(livingRoomCamera)
   await saveCamera(door1Camera)
   const result = await request(app)
