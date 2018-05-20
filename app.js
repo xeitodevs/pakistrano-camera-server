@@ -8,7 +8,6 @@ const {
   cameraNotFoundErrorHandler,
   generalNotFoundErrorHandler
 } = require('./generalHandlers')
-const cameraControl = require('./src/cameraAdapter')
 
 const {
   getCameraListing,

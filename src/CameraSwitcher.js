@@ -1,19 +1,19 @@
 class CameraSwitcher {
 
-  constructor (cameraRegistry, cameraRetrieve) {
+  constructor (cameraRegistry, cameraRetrieve, cameraDriverFactory) {
     this._cameraRegistry = cameraRegistry
     this._cameraRetrieve = cameraRetrieve
+    this._cameraDriverFactory = cameraDriverFactory
   }
 
   async perform (cameraName) {
     let camera
     camera = this._cameraRegistry.findCamera(cameraName)
-    if (camera) {
-      return camera
+    if (!camera) {
+      camera = await this._cameraRetrieve(cameraName)
+      this._cameraRegistry.addCamera(camera)
     }
-    camera = await this._cameraRetrieve(cameraName)
-    this._cameraRegistry.addCamera(camera)
-    return camera
+    return this._cameraDriverFactory(camera)
   }
 }
 
