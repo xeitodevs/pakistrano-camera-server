@@ -2,6 +2,8 @@
 
 const express = require('express')
 const app = express()
+const cors = require('cors')
+
 const bodyParser = require('body-parser')
 const {
   cameraDuplicatedErrorHandler,
@@ -18,6 +20,7 @@ const {
 } = require('./src/cameraRepository')
 
 app.use(bodyParser.json())
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.post('/cameras', async (req, res, next) => {
