@@ -33,8 +33,8 @@ app.post('/cameras', async (req, res, next) => {
       name: req.body.name,
       uuid: result
     })
-  } catch (e) {
-    next(e)
+  } catch (err) {
+    next(err)
   }
 })
 
@@ -43,8 +43,8 @@ app.get('/cameras', async (req, res, next) => {
   try {
     const result = await getCameraListing()
     res.send(result)
-  } catch (e) {
-    next(e)
+  } catch (err) {
+    next(err)
   }
 })
 
@@ -63,8 +63,8 @@ app.delete('/cameras/:cameraName', async (req, res, next) => {
     res.send({
       message: `Camera ${req.params.cameraName} was deleted.`
     })
-  } catch (e) {
-    next(e)
+  } catch (err) {
+    next(err)
   }
 })
 
@@ -74,9 +74,21 @@ app.delete('/cameras', async (req, res, next) => {
     res.send({
       message: 'All cameras removed !!'
     })
-  } catch (e) {
-    next(e)
+  } catch (err) {
+    next(err)
   }
+})
+
+app.get('/cameras/:cameraName/ping', async (req, res, next) => {
+
+  try {
+    const camera = req.app.services.cameraSwitcher.perform(req.params.cameraName)
+    const ms = await camera.ping()
+    res.send({ camera, ms })
+  } catch (err) {
+    next(err)
+  }
+
 })
 
 app.use(cameraNotFoundErrorHandler)
