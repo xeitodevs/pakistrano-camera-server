@@ -1,4 +1,4 @@
-const { serial: test} = require('ava')
+const { serial: test } = require('ava')
 const app = require('../app')
 const {
   deleteCameras,
@@ -7,13 +7,11 @@ const {
 } = require('../src/cameraRepository')
 
 const request = require('supertest')
-const { livingRoomCamera, door1Camera } = require('./resources/fixtures')
+const { livingRoomCamera, door1Camera, expectedContentType } = require('./resources/fixtures')
 const { assertUuid } = require('./resources/helpers')
 
 test.beforeEach(deleteCameras)
 test.afterEach(deleteCameras)
-
-const expectedContentType = 'application/json; charset=utf-8'
 
 test('Registering new cameras must respond properly', async (t) => {
   const result = await request(app)
@@ -28,7 +26,6 @@ test('Registering new cameras must respond properly', async (t) => {
   t.is(body.name, livingRoomCamera.name)
   assertUuid(t, body.uuid)
 })
-
 
 test('Registering new cameras duplicated must be conflict', async (t) => {
 

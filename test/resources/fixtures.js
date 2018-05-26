@@ -12,7 +12,10 @@ const door1Camera = {
   password: 'yterwq'
 }
 
+const expectedContentType = 'application/json; charset=utf-8'
+
 module.exports = {
   livingRoomCamera,
-  door1Camera
+  door1Camera,
+  expectedContentType
 }
