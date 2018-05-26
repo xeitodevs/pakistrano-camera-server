@@ -13,13 +13,17 @@ const proxyquire = require('proxyquire')
 let sandbox
 let pakistranoCameraControlMock
 
+const pakistranoCameraControlStub = {
+  ping: function () {}
+}
+
 test.beforeEach(async () => {
   sandbox = sinon.createSandbox()
-  pakistranoCameraControlMock = sandbox.mock()
+  pakistranoCameraControlMock = sandbox.mock(pakistranoCameraControlStub)
   proxyquire('../index.js', {
-    '../src/cameraFactory.js': {
+    './src/cameraFactory.js': {
       getCameraDriver: function (camera) {
-        return pakistranoCameraControlMock
+        return pakistranoCameraControlStub
       }
     }
   })
@@ -31,14 +35,14 @@ test.afterEach(async () => {
 })
 
 test('Ping one camera', async (t) => {
+  const ms = 23
+  pakistranoCameraControlMock.expects('ping').once().returns(ms)
   await saveCamera(livingRoomCamera)
   const result = await request(app)
     .get(`/cameras/${livingRoomCamera.name}/ping`)
     .expect('Content-Type', expectedContentType)
     .expect(200)
   const body = result.body
-  t.is(body, {
-    camera: livingRoomCamera.name,
-    ms: 23
-  })
+  pakistranoCameraControlMock.verify()
+  t.deepEqual(body, { ms })
 })

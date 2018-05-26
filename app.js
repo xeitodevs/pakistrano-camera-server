@@ -82,9 +82,9 @@ app.delete('/cameras', async (req, res, next) => {
 app.get('/cameras/:cameraName/ping', async (req, res, next) => {
 
   try {
-    const camera = req.app.services.cameraSwitcher.perform(req.params.cameraName)
+    const camera = await req.app.services.cameraSwitcher.perform(req.params.cameraName)
     const ms = await camera.ping()
-    res.send({ camera, ms })
+    res.send({ ms })
   } catch (err) {
     next(err)
   }
