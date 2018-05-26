@@ -1,3 +1,5 @@
+const { CameraNotFoundException } = require('./CameraNotFoundException')
+
 class CameraSwitcher {
 
   constructor (cameraRegistry, cameraRetrieve, cameraDriverFactory) {
@@ -8,10 +10,15 @@ class CameraSwitcher {
 
   async perform (cameraName) {
     let camera
-    camera = this._cameraRegistry.findCamera(cameraName)
-    if (!camera) {
-      camera = await this._cameraRetrieve(cameraName)
-      this._cameraRegistry.addCamera(camera)
+    try {
+      camera = this._cameraRegistry.findCamera(cameraName)
+    } catch (err) {
+      if (err instanceof CameraNotFoundException) {
+        camera = await this._cameraRetrieve(cameraName)
+        this._cameraRegistry.addCamera(camera)
+      } else {
+        throw err
+      }
     }
     return this._cameraDriverFactory(camera)
   }

@@ -1,5 +1,6 @@
 const { serial: test } = require('ava')
 const sinon = require('sinon')
+const { CameraNotFoundException } = require('../src/CameraNotFoundException')
 const { door1Camera } = require('./resources/fixtures')
 const { CameraSwitcher } = require('../src/CameraSwitcher')
 const { getCameraDriver } = require('../src/cameraFactory')
@@ -32,7 +33,7 @@ test('Camera switcher first of all tries registry', async (t) => {
 test('Camera switcher after registry try failed, goes for repository, saving to registry', async (t) => {
 
   const cameraRegistryMock = sandbox.mock(fakeCameraRegistry)
-  cameraRegistryMock.expects('findCamera').once().returns(null)
+  cameraRegistryMock.expects('findCamera').once().throws(new CameraNotFoundException())
   cameraRegistryMock.expects('addCamera').once().withArgs(door1Camera)
   const cameraRetrieveStub = sandbox.stub()
   cameraRetrieveStub.returns(door1Camera)
@@ -41,4 +42,16 @@ test('Camera switcher after registry try failed, goes for repository, saving to 
   cameraRegistryMock.verify()
   t.true(cameraRetrieveStub.called)
   t.deepEqual(result, getCameraDriver(door1Camera))
+})
+
+test('Camera switcher after registry failed for other reason that not found re launches exception', async (t) => {
+
+  const cameraRegistryMock = sandbox.mock(fakeCameraRegistry)
+  cameraRegistryMock.expects('findCamera').once().throws(new Error('Unexpected exception'))
+  cameraRegistryMock.expects('addCamera').never()
+  const cameraRetrieveStub = sandbox.stub()
+  const cameraSwitcher = new CameraSwitcher(fakeCameraRegistry, cameraRetrieveStub, getCameraDriver)
+  const exception = await t.throws(cameraSwitcher.perform(door1Camera.name), Error)
+  t.is(exception.message, 'Unexpected exception')
+  cameraRegistryMock.verify()
 })
