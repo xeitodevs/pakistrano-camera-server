@@ -14,7 +14,9 @@ let sandbox
 let pakistranoCameraControlMock
 
 const pakistranoCameraControlStub = {
-  ping: function () {}
+  ping: function () {},
+  getSnapshot: function () {},
+  getVideoStream: function () {}
 }
 
 test.beforeEach(async () => {
@@ -45,4 +47,30 @@ test('Ping one camera', async (t) => {
   const body = result.body
   pakistranoCameraControlMock.verify()
   t.deepEqual(body, { ms })
+})
+
+test('Get snapshot from camera', async (t) => {
+  const snapshot = Buffer.from('SNAPSHOT')
+  pakistranoCameraControlMock.expects('getSnapshot').once().returns(snapshot)
+  await saveCamera(livingRoomCamera)
+  const result = await request(app)
+    .get(`/cameras/${livingRoomCamera.name}/snapshot`)
+    .expect('Content-Type', 'application/octet-stream')
+    .expect(200)
+  const body = result.body
+  pakistranoCameraControlMock.verify()
+  t.deepEqual(body, snapshot)
+})
+
+test('Get video stream from camera', async (t) => {
+  const videoStream = Buffer.from('VideoStream')
+  pakistranoCameraControlMock.expects('getVideoStream').once().returns(videoStream)
+  await saveCamera(livingRoomCamera)
+  const result = await request(app)
+    .get(`/cameras/${livingRoomCamera.name}/video-stream`)
+    .expect('Content-Type', 'application/octet-stream')
+    .expect(200)
+  const body = result.body
+  pakistranoCameraControlMock.verify()
+  t.deepEqual(body, videoStream)
 })

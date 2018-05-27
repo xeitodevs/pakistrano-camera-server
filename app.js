@@ -91,6 +91,26 @@ app.get('/cameras/:cameraName/ping', async (req, res, next) => {
 
 })
 
+app.get('/cameras/:cameraName/snapshot', async (req, res, next) => {
+
+  try {
+    const camera = await req.app.services.cameraSwitcher.perform(req.params.cameraName)
+    res.send(camera.getSnapshot())
+  } catch (err) {
+    next(err)
+  }
+})
+
+app.get('/cameras/:cameraName/video-stream', async (req, res, next) => {
+
+  try {
+    const camera = await req.app.services.cameraSwitcher.perform(req.params.cameraName)
+    res.send(camera.getVideoStream())
+  } catch (err) {
+    next(err)
+  }
+})
+
 app.use(cameraNotFoundErrorHandler)
 app.use(cameraDuplicatedErrorHandler)
 app.use(generalNotFoundErrorHandler)
