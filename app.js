@@ -5,6 +5,7 @@ const app = express()
 const cors = require('cors')
 
 const bodyParser = require('body-parser')
+const { getCorrectDriverCallFunc } = require('./src/cameraDriverBinding')
 const {
   cameraDuplicatedErrorHandler,
   cameraNotFoundErrorHandler,
@@ -106,6 +107,18 @@ app.get('/cameras/:cameraName/video-stream', async (req, res, next) => {
   try {
     const camera = await req.app.services.cameraSwitcher.perform(req.params.cameraName)
     res.send(camera.getVideoStream())
+  } catch (err) {
+    next(err)
+  }
+})
+
+app.post('/cameras/:cameraName/control', async (req, res, next) => {
+
+  try {
+    const camera = await req.app.services.cameraSwitcher.perform(req.params.cameraName)
+    const driverFunc = getCorrectDriverCallFunc(req.body.command)
+    await camera[driverFunc]()
+    res.status(204).end()
   } catch (err) {
     next(err)
   }

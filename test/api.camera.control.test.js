@@ -16,7 +16,23 @@ let pakistranoCameraControlMock
 const pakistranoCameraControlStub = {
   ping: function () {},
   getSnapshot: function () {},
-  getVideoStream: function () {}
+  getVideoStream: function () {},
+  startMoveRight: function () {},
+  startMoveLeft: function () {},
+  centerCamera: function () {},
+  stopAxes: function () {},
+  startMoveUp: function () {},
+  startMoveDown: function () {},
+  startMoveBottomRight: function () {},
+  startMoveBottomLeft: function () {},
+  startMoveUpLeft: function () {},
+  startMoveUpRight: function () {},
+  startHorizontalPatrol: function () {},
+  stopHorizontalPatrol: function () {},
+  startVerticalPatrol: function () {},
+  stopVerticalPatrol: function () {},
+  activateIrView: function () {},
+  deactivateIrView: function () {},
 }
 
 test.beforeEach(async () => {
@@ -74,3 +90,124 @@ test('Get video stream from camera', async (t) => {
   pakistranoCameraControlMock.verify()
   t.deepEqual(body, videoStream)
 })
+
+async function cameraActionWithNoResponseMacro (t, command, expectedDriverCallFunction) {
+  pakistranoCameraControlMock.expects(expectedDriverCallFunction).once()
+  await saveCamera(livingRoomCamera)
+  const result = await request(app)
+    .post(`/cameras/${livingRoomCamera.name}/control`)
+    .send({ command })
+    .expect(204)
+
+  const body = result.body
+  pakistranoCameraControlMock.verify()
+  t.deepEqual(body, {})
+}
+
+test(
+  'Camera start move to right',
+  cameraActionWithNoResponseMacro,
+  'startMoveRight',
+  'startMoveRight'
+)
+test('Camera start move to left',
+  cameraActionWithNoResponseMacro,
+  'startMoveLeft',
+  'startMoveLeft'
+)
+test(
+  'Camera start move center',
+  cameraActionWithNoResponseMacro,
+  'centerCamera',
+  'centerCamera'
+)
+test(
+  'Camera stop axes',
+  cameraActionWithNoResponseMacro,
+  'stopAxes',
+  'stopAxes'
+)
+
+test(
+  'Camera start move up',
+  cameraActionWithNoResponseMacro,
+  'startMoveUp',
+  'startMoveUp'
+)
+
+test(
+  'Camera start move down',
+  cameraActionWithNoResponseMacro,
+  'startMoveDown',
+  'startMoveDown'
+)
+
+test(
+  'Camera start move bottom right',
+  cameraActionWithNoResponseMacro,
+  'startMoveBottomRight',
+  'startMoveBottomRight'
+)
+
+test(
+  'Camera start move bottom left',
+  cameraActionWithNoResponseMacro,
+  'startMoveBottomLeft',
+  'startMoveBottomLeft'
+)
+
+test(
+  'Camera start move up left',
+  cameraActionWithNoResponseMacro,
+  'startMoveUpLeft',
+  'startMoveUpLeft'
+)
+
+test(
+  'Camera start move up right',
+  cameraActionWithNoResponseMacro,
+  'startMoveUpRight',
+  'startMoveUpRight'
+)
+
+test(
+  'Camera start horizontal patrol',
+  cameraActionWithNoResponseMacro,
+  'startHorizontalPatrol',
+  'startHorizontalPatrol'
+)
+
+test(
+  'Camera stop horizontal patrol',
+  cameraActionWithNoResponseMacro,
+  'stopHorizontalPatrol',
+  'stopHorizontalPatrol'
+)
+
+test(
+  'Camera start vertical patrol',
+  cameraActionWithNoResponseMacro,
+  'startVerticalPatrol',
+  'startVerticalPatrol'
+)
+
+test(
+  'Camera stop vertical patrol',
+  cameraActionWithNoResponseMacro,
+  'stopVerticalPatrol',
+  'stopVerticalPatrol'
+)
+
+test(
+  'Camera activate ir',
+  cameraActionWithNoResponseMacro,
+  'activateIrView',
+  'activateIrView'
+)
+
+test(
+  'Camera de-activate ir',
+  cameraActionWithNoResponseMacro,
+  'deactivateIrView',
+  'deactivateIrView'
+)
