@@ -6,7 +6,7 @@ const {
 } = require('../src/cameraRepository')
 
 const request = require('supertest')
-const { livingRoomCamera, expectedContentType } = require('./resources/fixtures')
+const { livingRoomCamera, expectedContentType, expectedContentTypeStreams } = require('./resources/fixtures')
 
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
@@ -55,7 +55,7 @@ test('Get snapshot from camera', async (t) => {
   await saveCamera(livingRoomCamera)
   const result = await request(app)
     .get(`/cameras/${livingRoomCamera.name}/snapshot`)
-    .expect('Content-Type', 'application/octet-stream')
+    .expect('Content-Type', expectedContentTypeStreams)
     .expect(200)
   const body = result.body
   pakistranoCameraControlMock.verify()
@@ -68,7 +68,7 @@ test('Get video stream from camera', async (t) => {
   await saveCamera(livingRoomCamera)
   const result = await request(app)
     .get(`/cameras/${livingRoomCamera.name}/video-stream`)
-    .expect('Content-Type', 'application/octet-stream')
+    .expect('Content-Type', expectedContentTypeStreams)
     .expect(200)
   const body = result.body
   pakistranoCameraControlMock.verify()

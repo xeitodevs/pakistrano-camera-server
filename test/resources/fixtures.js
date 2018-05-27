@@ -13,9 +13,11 @@ const door1Camera = {
 }
 
 const expectedContentType = 'application/json; charset=utf-8'
+const expectedContentTypeStreams = 'application/octet-stream'
 
 module.exports = {
   livingRoomCamera,
   door1Camera,
-  expectedContentType
+  expectedContentType,
+  expectedContentTypeStreams
 }
