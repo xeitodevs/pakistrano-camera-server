@@ -13,7 +13,10 @@ const cameraSwitcher = new CameraSwitcher(cameraRegistry, retrieveCamera, getCam
 app.services = {
   cameraSwitcher
 }
-app.listen(config.port, () => {
-  console.log(`Pakistrano camera server is running at ${config.port}`)
-})
+
+if (!module.parent) {
+  app.listen(config.port, () => {
+    console.log(`Pakistrano camera server is running at ${config.port}`)
+  })
+}
 
