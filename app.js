@@ -96,7 +96,7 @@ app.get('/cameras/:cameraName/snapshot', async (req, res, next) => {
 
   try {
     const camera = await req.app.services.cameraSwitcher.perform(req.params.cameraName)
-    res.send(camera.getSnapshot())
+    res.send(await camera.getSnapshot())
   } catch (err) {
     next(err)
   }
@@ -106,7 +106,11 @@ app.get('/cameras/:cameraName/video-stream', async (req, res, next) => {
 
   try {
     const camera = await req.app.services.cameraSwitcher.perform(req.params.cameraName)
-    res.send(camera.getVideoStream())
+    const videoStream = await camera.getVideoStream()
+    res.writeHead(200, {
+      'Content-Type': 'application/octet-stream'
+    })
+    videoStream.pipe(res)
   } catch (err) {
     next(err)
   }

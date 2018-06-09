@@ -1,4 +1,6 @@
 const { serial: test } = require('ava')
+const stream = require('stream')
+
 const app = require('../app')
 const {
   deleteCameras,
@@ -6,7 +8,7 @@ const {
 } = require('../src/cameraRepository')
 
 const request = require('supertest')
-const { livingRoomCamera, expectedContentType, expectedContentTypeStreams } = require('./resources/fixtures')
+const { livingRoomCamera, expectedContentType, expectedContentTypeStreams, expectedContentTypeHtml } = require('./resources/fixtures')
 
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
@@ -79,7 +81,9 @@ test('Get snapshot from camera', async (t) => {
 })
 
 test('Get video stream from camera', async (t) => {
-  const videoStream = Buffer.from('VideoStream')
+  const videoStream = stream.PassThrough()
+  const content = Buffer.from('VideoStream')
+  videoStream.end(content)
   pakistranoCameraControlMock.expects('getVideoStream').once().returns(videoStream)
   await saveCamera(livingRoomCamera)
   const result = await request(app)
@@ -88,7 +92,7 @@ test('Get video stream from camera', async (t) => {
     .expect(200)
   const body = result.body
   pakistranoCameraControlMock.verify()
-  t.deepEqual(body, videoStream)
+  t.deepEqual(body, content)
 })
 
 async function cameraActionWithNoResponseMacro (t, command, expectedDriverCallFunction) {
