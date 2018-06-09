@@ -28,3 +28,17 @@ test('Registry must throw an exception when camera not found unit test', (t) => 
   }, CameraNotFoundException)
   t.is(exception.message, `Cannot find camera ${wantedCamera}`)
 })
+
+test('Registry must clear all cameras', (t) => {
+  registry.addCamera(livingRoomCamera)
+  registry.addCamera(door1Camera)
+  registry.deleteAll()
+  t.deepEqual(registry.registry, [])
+})
+
+test('Registry must clear specific camera', (t) => {
+  registry.addCamera(livingRoomCamera)
+  registry.addCamera(door1Camera)
+  registry.delete(door1Camera.name)
+  t.deepEqual(registry.registry, [livingRoomCamera])
+})
