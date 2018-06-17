@@ -1,5 +1,5 @@
 const { serial: test } = require('ava')
-const app = require('../app')
+const { getAppInstance } = require('../appFactory')
 const {
   deleteCameras,
   saveCamera,
@@ -14,7 +14,7 @@ test.beforeEach(deleteCameras)
 test.afterEach(deleteCameras)
 
 test('Registering new cameras must respond properly', async (t) => {
-  const result = await request(app)
+  const result = await request(getAppInstance())
     .post('/cameras')
     .expect('Content-Type', expectedContentType)
     .expect('Location', `/cameras/${livingRoomCamera.name}`)
@@ -30,7 +30,7 @@ test('Registering new cameras must respond properly', async (t) => {
 test('Registering new cameras duplicated must be conflict', async (t) => {
 
   await saveCamera(livingRoomCamera)
-  const result = await request(app)
+  const result = await request(getAppInstance())
     .post('/cameras')
     .expect('Content-Type', expectedContentType)
     .expect(409)
@@ -42,7 +42,7 @@ test('Registering new cameras duplicated must be conflict', async (t) => {
 test('Listing registered cameras', async (t) => {
   const uuidDoor1Camera = await saveCamera(door1Camera)
   const uuidLivingRoom = await saveCamera(livingRoomCamera)
-  const result = await request(app)
+  const result = await request(getAppInstance())
     .get('/cameras')
     .expect('Content-Type', expectedContentType)
     .expect(200)
@@ -55,7 +55,7 @@ test('Listing registered cameras', async (t) => {
 test('Get specific camera by name', async (t) => {
   await saveCamera(door1Camera)
   const uuidLivingRoom = await saveCamera(livingRoomCamera)
-  const result = await request(app)
+  const result = await request(getAppInstance())
     .get(`/cameras/${livingRoomCamera.name}`)
     .expect('Content-Type', expectedContentType)
     .expect(200)
@@ -66,7 +66,7 @@ test('Get specific camera by name', async (t) => {
 test('Get specific camera by name, not found', async (t) => {
 
   const cameraToSearch = 'unknown404'
-  const result = await request(app)
+  const result = await request(getAppInstance())
     .get(`/cameras/${cameraToSearch}`)
     .expect('Content-Type', expectedContentType)
     .expect(404)
@@ -79,7 +79,7 @@ test('Delete specific camera by name', async (t) => {
   await saveCamera(livingRoomCamera)
   await saveCamera(door1Camera)
 
-  const result = await request(app)
+  const result = await request(getAppInstance())
     .delete(`/cameras/${livingRoomCamera.name}`)
     .expect('Content-Type', expectedContentType)
     .expect(200)
@@ -93,7 +93,7 @@ test('Delete specific camera by name', async (t) => {
 test('Delete specific camera by name, not found', async (t) => {
 
   const cameraToSearch = 'unknown404'
-  const result = await request(app)
+  const result = await request(getAppInstance())
     .delete(`/cameras/${cameraToSearch}`)
     .expect('Content-Type', expectedContentType)
     .expect(404)
@@ -104,7 +104,7 @@ test('Delete specific camera by name, not found', async (t) => {
 test('Delete all cameras', async (t) => {
   await saveCamera(livingRoomCamera)
   await saveCamera(door1Camera)
-  const result = await request(app)
+  const result = await request(getAppInstance())
     .delete('/cameras')
     .expect('Content-Type', expectedContentType)
     .expect(200)

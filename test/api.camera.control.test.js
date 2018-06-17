@@ -1,20 +1,3 @@
-const { serial: test } = require('ava')
-const stream = require('stream')
-
-const app = require('../app')
-const {
-  deleteCameras,
-  saveCamera
-} = require('../src/cameraRepository')
-
-const request = require('supertest')
-const { livingRoomCamera, expectedContentType, expectedContentTypeStreams, expectedContentTypeHtml } = require('./resources/fixtures')
-
-const sinon = require('sinon')
-const proxyquire = require('proxyquire')
-let sandbox
-let pakistranoCameraControlMock
-
 const pakistranoCameraControlStub = {
   ping: function () {},
   getSnapshot: function () {},
@@ -37,16 +20,34 @@ const pakistranoCameraControlStub = {
   deactivateIrView: function () {},
 }
 
+function getCameraDriver () {
+  return pakistranoCameraControlStub
+}
+
+const { getAppInstance } = require('../appFactory')
+const { serial: test } = require('ava')
+const sinon = require('sinon')
+const stream = require('stream')
+const request = require('supertest')
+
+const {
+  deleteCameras,
+  saveCamera
+} = require('../src/cameraRepository')
+const {
+  livingRoomCamera,
+  expectedContentType,
+  expectedContentTypeStreams
+} = require('./resources/fixtures')
+let sandbox
+let pakistranoCameraControlMock
+
+let appInstance
+
 test.beforeEach(async () => {
   sandbox = sinon.createSandbox()
   pakistranoCameraControlMock = sandbox.mock(pakistranoCameraControlStub)
-  proxyquire('../index.js', {
-    './src/cameraFactory.js': {
-      getCameraDriver: function (camera) {
-        return pakistranoCameraControlStub
-      }
-    }
-  })
+  appInstance = getAppInstance(getCameraDriver)
   await deleteCameras()
 })
 test.afterEach(async () => {
@@ -58,7 +59,7 @@ test('Ping one camera', async (t) => {
   const ms = 23
   pakistranoCameraControlMock.expects('ping').once().returns(ms)
   await saveCamera(livingRoomCamera)
-  const result = await request(app)
+  const result = await request(appInstance)
     .get(`/cameras/${livingRoomCamera.name}/ping`)
     .expect('Content-Type', expectedContentType)
     .expect(200)
@@ -71,7 +72,7 @@ test('Get snapshot from camera', async (t) => {
   const snapshot = Buffer.from('SNAPSHOT')
   pakistranoCameraControlMock.expects('getSnapshot').once().returns(snapshot)
   await saveCamera(livingRoomCamera)
-  const result = await request(app)
+  const result = await request(appInstance)
     .get(`/cameras/${livingRoomCamera.name}/snapshot`)
     .expect('Content-Type', expectedContentTypeStreams)
     .expect(200)
@@ -86,7 +87,7 @@ test('Get video stream from camera', async (t) => {
   videoStream.end(content)
   pakistranoCameraControlMock.expects('getVideoStream').once().returns(videoStream)
   await saveCamera(livingRoomCamera)
-  const result = await request(app)
+  const result = await request(appInstance)
     .get(`/cameras/${livingRoomCamera.name}/video-stream`)
     .expect('Content-Type', expectedContentTypeStreams)
     .expect(200)
@@ -98,7 +99,7 @@ test('Get video stream from camera', async (t) => {
 async function cameraActionWithNoResponseMacro (t, command, expectedDriverCallFunction) {
   pakistranoCameraControlMock.expects(expectedDriverCallFunction).once()
   await saveCamera(livingRoomCamera)
-  const result = await request(app)
+  const result = await request(appInstance)
     .post(`/cameras/${livingRoomCamera.name}/control`)
     .send({ command })
     .expect(204)
