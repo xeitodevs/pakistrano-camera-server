@@ -37,6 +37,18 @@ async function saveCamera ({ name, host, user, password }) {
   }
 }
 
+async function updateCamera (cameraName, { name, host, user, password }) {
+
+  try {
+    const db = await connection
+    await db.run(`UPDATE ${cameraTable} SET name=?, host=?, user=?, password=?, updated_at=? WHERE name=?`, [name, host, user, password, new Date(), cameraName])
+  } catch (e) {
+    if (e.errno === 19) {
+      throw new DuplicatedCameraException(name)
+    }
+  }
+}
+
 async function deleteCamera (name) {
   const db = await connection
   const result = await db.run(`DELETE FROM ${cameraTable} WHERE name='${name}'`)
@@ -54,6 +66,7 @@ module.exports = {
   getCameraListing,
   retrieveCamera,
   saveCamera,
+  updateCamera,
   deleteCamera,
   deleteCameras
 }

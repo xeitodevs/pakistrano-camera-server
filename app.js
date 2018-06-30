@@ -16,6 +16,7 @@ const {
   getCameraListing,
   retrieveCamera,
   saveCamera,
+  updateCamera,
   deleteCamera,
   deleteCameras
 } = require('./src/cameraRepository')
@@ -52,6 +53,16 @@ app.get('/cameras', async (req, res, next) => {
 app.get('/cameras/:cameraName', async (req, res, next) => {
   try {
     const result = await retrieveCamera(req.params.cameraName)
+    res.send(result)
+  } catch (err) {
+    next(err)
+  }
+})
+
+app.put('/cameras/:cameraName', async (req, res, next) => {
+  try {
+    req.app.services.cameraSwitcher._cameraRegistry.delete(req.params.cameraName)
+    const result = await updateCamera(req.params.cameraName, req.body)
     res.send(result)
   } catch (err) {
     next(err)

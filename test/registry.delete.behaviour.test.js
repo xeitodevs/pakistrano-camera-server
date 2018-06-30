@@ -31,6 +31,16 @@ test('Camera server must remove a camera when remove action is triggered', async
   t.pass()
 })
 
+
+test('Camera server must remove a camera when update action is triggered', async (t) => {
+  await saveCamera(door1Camera)
+  await request(getAppInstance())
+    .put(`/cameras/${door1Camera.name}`)
+  sinon.assert.calledOnce(CameraRegistry.prototype.delete)
+  sinon.assert.notCalled(CameraRegistry.prototype.deleteAll)
+  t.pass()
+})
+
 test('Camera server must remove all cameras when remove all action is triggered', async (t) => {
   await request(getAppInstance())
     .delete('/cameras')

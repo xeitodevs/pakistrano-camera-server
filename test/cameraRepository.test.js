@@ -9,7 +9,8 @@ const {
   retrieveCamera,
   saveCamera,
   deleteCamera,
-  deleteCameras
+  deleteCameras,
+  updateCamera
 } = require('../src/cameraRepository')
 
 test.beforeEach(deleteCameras)
@@ -76,4 +77,23 @@ test('Must remove all cameras', async (t) => {
   await deleteCameras()
   const result = await getCameraListing()
   t.is(0, result.length)
+})
+
+
+test('Update camera creation fields', async (t) => {
+
+  await saveCamera(livingRoomCamera)
+  const newInfo = {
+    name: 'livingRoomCameraNewName',
+    host: 'new.host.com',
+    user: 'new_user',
+    password: 'newPassword'
+  }
+  await updateCamera(livingRoomCamera.name, newInfo)
+  const result = await retrieveCamera(newInfo.name)
+  t.is(result.name, newInfo.name)
+  t.is(result.host, newInfo.host)
+  t.is(result.user, newInfo.user)
+  t.is(result.password, newInfo.password)
+  assertNearDate(t, new Date(result.updatedAt), new Date(), 1000)
 })

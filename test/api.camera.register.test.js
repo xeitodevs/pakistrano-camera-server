@@ -3,6 +3,7 @@ const { getAppInstance } = require('../appFactory')
 const {
   deleteCameras,
   saveCamera,
+  retrieveCamera,
   getCameraListing
 } = require('../src/cameraRepository')
 
@@ -112,4 +113,23 @@ test('Delete all cameras', async (t) => {
   t.is('All cameras removed !!', body.message)
   const existingCameras = await getCameraListing()
   t.is(0, existingCameras.length)
+})
+
+test('We can update a camera', async (t) => {
+  await saveCamera(livingRoomCamera)
+  const newInfo = {
+    name: 'livingRoomCameraNewName',
+    host: 'new.host.com',
+    user: 'new_user',
+    password: 'newPassword'
+  }
+  await request(getAppInstance())
+    .put(`/cameras/${livingRoomCamera.name}`)
+    .expect(200)
+    .send(newInfo)
+  const resultantCamera = await retrieveCamera(newInfo.name)
+  t.is(newInfo.name, resultantCamera.name)
+  t.is(newInfo.host, resultantCamera.host)
+  t.is(newInfo.user, resultantCamera.user)
+  t.is(newInfo.password, resultantCamera.password)
 })

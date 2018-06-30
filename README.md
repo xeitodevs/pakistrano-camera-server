@@ -84,6 +84,18 @@ curl --request POST \
 	"command": "startMoveRight"
 }'
 ```
+### Update one camera.
+```bash
+curl --request PUT \
+  --url http://localhost:3000/cameras/labcamera \
+  --header 'content-type: application/json' \
+  --data '{
+	"name": "labcamera",
+  "host": "10.0.8.2",
+  "user": "adminnnn",
+  "password": "adminnnn"
+}'
+```
 ### Delete one camera
 ``` bash
 curl --request DELETE \
@@ -96,3 +108,5 @@ curl --request DELETE \
   --url http://localhost:3000/cameras \
   --header 'content-type: application/json'
 ```
+
+
