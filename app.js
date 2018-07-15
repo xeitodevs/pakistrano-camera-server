@@ -10,7 +10,7 @@ const {
   cameraDuplicatedErrorHandler,
   cameraNotFoundErrorHandler,
   generalNotFoundErrorHandler
-} = require('./generalHandlers')
+} = require('./errorHandlers')
 
 const {
   getCameraListing,
