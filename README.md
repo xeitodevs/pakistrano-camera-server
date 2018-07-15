@@ -117,3 +117,17 @@ curl --request DELETE \
   --url http://localhost:3000/cameras \
   --header 'content-type: application/json'
 ```
+
+## How to run tests
+- Run ALL tests
+    ```bash
+    npm test
+    ```
+- Run tests in watch mode
+    ```bash
+    npm run-script test:watch
+    ```
+- Run only unit tests
+    ```
+    npm run-script test:unit
+    ```

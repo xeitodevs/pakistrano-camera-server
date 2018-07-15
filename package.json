@@ -6,9 +6,10 @@
   "scripts": {
     "start": "node index.js",
     "start:dev": "nodemon index.js",
-    "test": "nyc --reporter=lcov ava test/**.test.js --verbose --serial",
-    "test:watch": "nyc --reporter=lcov ava test/**.test.js --verbose --watch --serial",
-    "unit-test": "nyc --reporter=lcov ava test/**.test.js --verbose --match='*unit test*'",
+    "test:database:init": "cp database.sample.sqlite var/database.sqlite",
+    "test": "npm run-script test:database:init && nyc --reporter=lcov ava test/**.test.js --verbose --serial",
+    "test:watch": "npm run-script test:database:init && nyc --reporter=lcov ava test/**.test.js --verbose --watch --serial",
+    "test:unit": "nyc --reporter=lcov ava test/**.test.js --verbose --match='*unit test*'",
     "prepush": "npm test"
   },
   "repository": {
