@@ -1,12 +1,21 @@
 # Pakistrano camera server
 
-This sotware allows you to easily control foscam
-camera family.
+This software allows you to easily control foscam
+camera family via http.
 
 ## Camera driver
 This is Node js express server that wraps the camera driver. This driver
 its available [here](github.com/xeitodevs/pakistrano-camera-control.git).
 So if you only want to control the camera from node, download it.
+
+## Run the server with docker
+This is the preferred aproach to run the server. First thing is to create a volume
+to store data. Then you can run the server:
+```bash
+docker volume create cameras_data
+docker run --rm -v cameras_data:/home/nopde/app/var -d -p 3000:3000  xeitodevs/pakistrano-camera-server:latest
+```
+Have fun !!!
 
 ## Exposing the API
 Api has two main purpose methods
@@ -108,5 +117,3 @@ curl --request DELETE \
   --url http://localhost:3000/cameras \
   --header 'content-type: application/json'
 ```
-
-
