@@ -13,7 +13,7 @@ This is the preferred aproach to run the server. First thing is to create a volu
 to store data. Then you can run the server:
 ```bash
 docker volume create cameras_data
-docker run --rm -v cameras_data:/home/nopde/app/var -d -p 3000:3000 xeitodevs/pakistrano-camera-server:latest
+docker run --rm -v cameras_data:/home/node/app/var -d -p 3000:3000 xeitodevs/pakistrano-camera-server:latest
 ```
 Have fun !!!
 
