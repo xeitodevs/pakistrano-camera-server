@@ -1,0 +1,6 @@
+var
+!var/.gitkeep
+.git
+.nyc_ouput
+coverage
+test
