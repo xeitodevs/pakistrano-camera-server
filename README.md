@@ -5,7 +5,7 @@ camera family via http requests through a fast and secure api gateway.
 
 ## Camera driver
 This is Node js express server that wraps the camera driver. This driver
-its available [here](github.com/xeitodevs/pakistrano-camera-control.git).
+its available [here](https://www.github.com/xeitodevs/pakistrano-camera-control.git).
 So if you only want to control the camera from nodejs without the http interface, this is what you want.
 
 ## Run the server with docker
