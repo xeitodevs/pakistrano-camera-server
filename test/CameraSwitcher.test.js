@@ -17,7 +17,7 @@ test.beforeEach(() => {
 })
 test.afterEach(() => sandbox.restore())
 
-test('Camera switcher first of all tries registry', async (t) => {
+test('Camera switcher first of all tries registry unit test', async (t) => {
 
   const cameraRegistryMock = sandbox.mock(fakeCameraRegistry)
   cameraRegistryMock.expects('findCamera').once().returns(door1Camera)
@@ -30,7 +30,7 @@ test('Camera switcher first of all tries registry', async (t) => {
   t.deepEqual(result, getCameraDriver(door1Camera))
 })
 
-test('Camera switcher after registry try failed, goes for repository, saving to registry', async (t) => {
+test('Camera switcher after registry try failed, goes for repository, saving to registry unit test', async (t) => {
 
   const cameraRegistryMock = sandbox.mock(fakeCameraRegistry)
   cameraRegistryMock.expects('findCamera').once().throws(new CameraNotFoundException())
@@ -44,7 +44,7 @@ test('Camera switcher after registry try failed, goes for repository, saving to 
   t.deepEqual(result, getCameraDriver(door1Camera))
 })
 
-test('Camera switcher after registry failed for other reason that not found re launches exception', async (t) => {
+test('Camera switcher after registry failed for other reason that not found re launches exception unit test', async (t) => {
 
   const cameraRegistryMock = sandbox.mock(fakeCameraRegistry)
   cameraRegistryMock.expects('findCamera').once().throws(new Error('Unexpected exception'))
