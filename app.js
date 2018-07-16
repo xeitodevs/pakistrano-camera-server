@@ -1,15 +1,20 @@
 'use strict'
 
+const config = require('./config')
 const express = require('express')
+const bearerToken = require('express-bearer-token')
+
 const app = express()
 const cors = require('cors')
 
 const bodyParser = require('body-parser')
+const { authenticate } = require('./src/authenticator')
 const { getCorrectDriverCallFunc } = require('./src/cameraDriverBinding')
 const {
   cameraDuplicatedErrorHandler,
   cameraNotFoundErrorHandler,
-  generalNotFoundErrorHandler
+  generalNotFoundErrorHandler,
+  authenticationHandler
 } = require('./errorHandlers')
 
 const {
@@ -21,9 +26,22 @@ const {
   deleteCameras
 } = require('./src/cameraRepository')
 
+app.use(bearerToken())
 app.use(bodyParser.json())
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
+
+// Basic auth token control
+app.use((req, res, next) => {
+  try {
+    if (config.environment === 'production') {
+      authenticate(req.token, config.authToken)
+    }
+    next()
+  } catch (err) {
+    next(err)
+  }
+})
 
 app.post('/cameras', async (req, res, next) => {
 
@@ -143,6 +161,7 @@ app.post('/cameras/:cameraName/control', async (req, res, next) => {
 
 app.use(cameraNotFoundErrorHandler)
 app.use(cameraDuplicatedErrorHandler)
+app.use(authenticationHandler)
 app.use(generalNotFoundErrorHandler)
 
 module.exports = app

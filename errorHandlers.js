@@ -1,3 +1,4 @@
+const { AuthException } = require('./src/AuthException')
 const { DuplicatedCameraException } = require('./src/DuplicatedCameraException')
 const { CameraNotFoundException } = require('./src/CameraNotFoundException')
 
@@ -23,6 +24,17 @@ function cameraDuplicatedErrorHandler (err, req, res, next) {
   next(err)
 }
 
+function authenticationHandler (err, req, res, next) {
+
+  if (err instanceof AuthException) {
+    res.status(403)
+    res.send({
+      message: err.message
+    })
+  }
+  next(err)
+}
+
 function generalNotFoundErrorHandler (req, res) {
   res.status(404)
   res.send({
@@ -33,5 +45,6 @@ function generalNotFoundErrorHandler (req, res) {
 module.exports = {
   cameraNotFoundErrorHandler,
   cameraDuplicatedErrorHandler,
-  generalNotFoundErrorHandler
+  generalNotFoundErrorHandler,
+  authenticationHandler
 }

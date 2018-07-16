@@ -1,26 +1,37 @@
 # Pakistrano camera server
 
-This software allows you to easily control foscam
-camera family via http.
+This software allows you to easily control Foscam
+camera family via http requests through a fast and secure api gateway.
 
 ## Camera driver
 This is Node js express server that wraps the camera driver. This driver
 its available [here](github.com/xeitodevs/pakistrano-camera-control.git).
-So if you only want to control the camera from node, download it.
+So if you only want to control the camera from nodejs without the http interface, this is what you want.
 
 ## Run the server with docker
 This is the preferred aproach to run the server. First thing is to create a volume
-to store data. Then you can run the server:
+to store data. Then you can run the server. Here is an example with all options:
 ```bash
+
+# Create the data volume
 docker volume create cameras_data
-docker run --rm -v cameras_data:/home/node/app/var -d -p 3000:3000 xeitodevs/pakistrano-camera-server:latest
+
+# Run the server
+docker run --rm \
+-v cameras_data:/home/node/app/var \
+-d \
+-p 3000:3000 \
+-e "NODE_ENV=production" \ ## optional. this is the default
+-e "AUTH_TOKEN=<here your secret token>" \
+-e "USE_TLS=1" ## optional. this is the default. (not available yet)
+xeitodevs/pakistrano-camera-server:latest
 ```
 Have fun !!!
 
 ## Exposing the API
 Api has two main purpose methods
 * The camera CRUD
-* The camera control command endpoint, with the following commands
+* The camera control command endpoint, with the following available commands
    * startMoveRight
    * startMoveLeft
    * centerCamera
@@ -37,6 +48,11 @@ Api has two main purpose methods
    * stopVerticalPatrol
    * activateIrView
    * deactivateIrView
+
+### Authentication
+
+When not in development, this server uses bearer token authentication,
+so don`t forget to set your compliant authorization with [RFC6750](https://tools.ietf.org/html/rfc6750)
 
 ### Camera registration
 ``` bash
