@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/xeitodevs/pakistrano-camera-server.svg?branch=master)](https://travis-ci.org/xeitodevs/pakistrano-camera-server)
+
 # Pakistrano camera server
 
 This software allows you to easily control Foscam
