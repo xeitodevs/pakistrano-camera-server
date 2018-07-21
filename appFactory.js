@@ -9,7 +9,8 @@ function getAppInstance (withCameraDriver = getCameraDriver) {
   const cameraRegistry = new CameraRegistry()
   const cameraSwitcher = new CameraSwitcher(cameraRegistry, retrieveCamera, withCameraDriver)
   app.services = {
-    cameraSwitcher
+    cameraSwitcher,
+    cameraRegistry
   }
   return app
 }

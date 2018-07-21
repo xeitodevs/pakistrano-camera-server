@@ -79,7 +79,7 @@ app.get('/cameras/:cameraName', async (req, res, next) => {
 
 app.put('/cameras/:cameraName', async (req, res, next) => {
   try {
-    req.app.services.cameraSwitcher._cameraRegistry.delete(req.params.cameraName)
+    req.app.services.cameraRegistry.delete(req.params.cameraName)
     const result = await updateCamera(req.params.cameraName, req.body)
     res.send(result)
   } catch (err) {
@@ -89,7 +89,7 @@ app.put('/cameras/:cameraName', async (req, res, next) => {
 
 app.delete('/cameras/:cameraName', async (req, res, next) => {
   try {
-    req.app.services.cameraSwitcher._cameraRegistry.delete(req.params.cameraName)
+    req.app.services.cameraRegistry.delete(req.params.cameraName)
     await deleteCamera(req.params.cameraName)
     res.send({
       message: `Camera ${req.params.cameraName} was deleted.`
@@ -101,7 +101,7 @@ app.delete('/cameras/:cameraName', async (req, res, next) => {
 
 app.delete('/cameras', async (req, res, next) => {
   try {
-    req.app.services.cameraSwitcher._cameraRegistry.deleteAll()
+    req.app.services.cameraRegistry.deleteAll()
     await deleteCameras()
     res.send({
       message: 'All cameras removed !!'
