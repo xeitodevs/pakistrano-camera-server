@@ -107,11 +107,11 @@ curl --request POST \
   --url http://localhost:3000/cameras \
   --header 'content-type: application/json' \
   --data '{
-	"name": "labcamera",
+    "name": "labcamera",
     "host": "10.0.8.4",
     "user": "admin",
     "password": "admin"
-}'
+  }'
 
 ```
 
@@ -153,8 +153,8 @@ curl --request POST \
   --url http://localhost:3000/cameras/labcamera/control \
   --header 'content-type: application/json' \
   --data '{
-	"command": "startMoveRight"
-}'
+    "command": "startMoveRight"
+  }'
 ```
 ### Update one camera.
 ```bash
@@ -162,11 +162,11 @@ curl --request PUT \
   --url http://localhost:3000/cameras/labcamera \
   --header 'content-type: application/json' \
   --data '{
-	"name": "labcamera",
-  "host": "10.0.8.2",
-  "user": "adminnnn",
-  "password": "adminnnn"
-}'
+    "name": "labcamera",
+    "host": "10.0.8.2",
+    "user": "admin2",
+    "password": "admin2"
+  }'
 ```
 ### Delete one camera
 ``` bash
