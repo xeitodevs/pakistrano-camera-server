@@ -3,31 +3,78 @@
 This software allows you to easily control Foscam
 camera family via http requests through a fast and secure api gateway.
 
-## Camera driver
-This is Node js express server that wraps the camera driver. This driver
-its available [here](https://www.github.com/xeitodevs/pakistrano-camera-control.git).
-So if you only want to control the camera from nodejs without the http interface, this is what you want.
+## Camera driver (before you continue reading)
+This is nodejs express server that wraps the camera driver. This driver
+is available [here](https://www.github.com/xeitodevs/pakistrano-camera-control.git).
+So, if you only want to control the camera from nodejs without the http interface, this is what you want.
 
 ## Run the server with docker
-This is the preferred aproach to run the server. First thing is to create a volume
+
+This is the preferred approach to run the server. You will need to create a volume
 to store data. Then you can run the server. Here is an example with all options:
+
+#### I want  to run my server in development mode (no authentication).
 ```bash
-
-# Create the data volume
-docker volume create cameras_data
-
-# Run the server
 docker run --rm \
 -v cameras_data:/home/node/app/var \
 -d \
 -p 3000:3000 \
--e "NODE_ENV=production" \ ## optional. this is the default
--e "AUTH_TOKEN=<here your secret token>" \
--e "USE_TLS=1" ## optional. this is the default. (not available yet)
-xeitodevs/pakistrano-camera-server:latest
+-e "NODE_ENV=development" \
+test:latest
 ```
-Have fun !!!
-
+#### I want to run my server on production, without SSL
+```bash
+docker run --rm \
+-v cameras_data:/home/node/app/var \
+-d \
+-p 3000:3000 \
+-e "NODE_ENV=production" \
+-e "AUTH_TOKEN=<here your secret token>" \
+test:latest
+```
+#### I want to run my server on production, with auto self-signed generated certificate by the server.
+```bash
+docker run --rm \
+-v cameras_data:/home/node/app/var \
+-d \
+-p 3000:3000 \
+-e "NODE_ENV=production" \
+-e "AUTH_TOKEN=<here your secret token>" \
+-e "ENABLE_SSL=1" \
+test:latest
+```
+#### I want to run my server on production, with auto self-signed generated certificate by the server, tunning the certificate attributes.
+```bash
+docker run --rm \
+-v cameras_data:/home/node/app/var \
+-d \
+-p 3000:3000 \
+-e "NODE_ENV=production" \
+-e "AUTH_TOKEN=<here your secret token>" \
+-e "ENABLE_SSL=1" \
+-e "SSL_CERTIFICATE_SUBJECT_STRING=/C=US/ST=Denial/L=Springfield/O=MyOrganization/CN=www.mycam.com" \
+test:latest
+```
+#### I want to run my server on production, with my own specified certificate.
+```bash
+docker run --rm \
+-v cameras_data:/home/node/app/var \
+-d \
+-p 3000:3000 \
+-e "NODE_ENV=production" \
+-e "AUTH_TOKEN=<here your secret token>" \
+-e "ENABLE_SSL=1" \
+-e "SSL_B64_CERT=$(base64 -w 0 /path/to/your/server.cert)" \
+-e "SSL_B64_KEY=$(base64 -w 0 /path/to/your/server.key)" \
+test:latest
+```
+#### Docker boot behaviour
+The next environment variables are only intended for the first-time generation of
+camera database and certificates. They will become unnecessary after first boot since
+all that data is now available in the generated data volume.
+- SSL_CERTIFICATE_SUBJECT_STRING
+- SSL_B64_CERT
+- SSL_B64_KEY
 ## Exposing the API
 Api has two main purpose methods
 * The camera CRUD

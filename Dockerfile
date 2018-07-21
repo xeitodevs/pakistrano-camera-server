@@ -4,4 +4,4 @@ ENV WORKING_DIR=/home/node/app
 COPY . $WORKING_DIR
 WORKDIR $WORKING_DIR
 VOLUME $WORKING_DIR/var
-CMD ./init_database.sh && su -c 'node ./index.js' node
+CMD ./init_server.sh && su -c 'node ./index.js' node
