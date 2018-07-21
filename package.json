@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "start:dev": "NODE_ENV=development nodemon index.js",
-    "test:database:init": "cp ./database.sample.sqlite ./var/database.sqlite",
+    "test:database:init": "bash -c 'source ./init_server_functions.sh && init_database $(whoami)'",
     "test": "npm run-script test:database:init && NODE_ENV=development nyc --reporter=lcov ava test/**.test.js --verbose --serial",
     "test:watch": "npm run-script test:database:init && NODE_ENV=development nyc --reporter=lcov ava test/**.test.js --verbose --watch --serial",
     "test:unit": "NODE_ENV=development nyc --reporter=lcov ava test/**.test.js --verbose --match='*unit test*'",
